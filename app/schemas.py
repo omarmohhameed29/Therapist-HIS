@@ -4,6 +4,9 @@ from datetime import datetime, date
 from typing import Optional
 
 
+
+# Class Patient(BaseException)
+
 class PatientResponse(BaseModel):
     first_name: str
     last_name: str
