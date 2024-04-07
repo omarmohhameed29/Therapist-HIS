@@ -5,12 +5,12 @@ from typing import Optional
 
 
 class PatientResponse(BaseModel):
-    id: int
     first_name: str
     last_name: str
-    birth_date: str 
+    ssn: str
+    birth_date: date 
     sex: str
-    city: str
+    phone: str
 
 
 class PatientCreate(BaseModel):
@@ -22,3 +22,11 @@ class PatientCreate(BaseModel):
     city: str
     governorate: str
     phone: str
+
+# Pydantic model for updating a patient
+class PatientUpdate(BaseModel):
+    first_name: str
+    last_name: str
+    birth_date: str
+    sex: str
+    city: str
