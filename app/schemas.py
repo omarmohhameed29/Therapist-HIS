@@ -33,3 +33,32 @@ class PatientUpdate(BaseModel):
     birth_date: str
     sex: str
     city: str
+
+
+
+class TherapistCreate(BaseModel):
+    first_name: str
+    last_name: str
+    SSN: str
+    birth_date: str
+    sex: str
+    city: str
+    government: str
+    phone: str
+    specialization: str
+    email: EmailStr
+    password: str
+    hour_rate: float
+
+class TherapistResponse(BaseModel):
+    first_name: str
+    last_name: str
+    phone: str
+    specialization: str
+    hour_rate: float
+
+class TherapistUpdate(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str] 
+    specialization: Optional[str]
+    hour_rate: Optional[float]
