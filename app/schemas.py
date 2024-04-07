@@ -4,22 +4,21 @@ from datetime import datetime, date
 from typing import Optional
 
 
-class Patient(BaseModel):
+class PatientResponse(BaseModel):
     id: int
-    firt_name: str
+    first_name: str
     last_name: str
-    birth_date: date
-    phone: str
-    gender: str
+    birth_date: str 
+    sex: str
     city: str
 
-class PatientIn(Patient):
+
+class PatientCreate(BaseModel):
     ssn: str
+    first_name: str
+    last_name: str
+    birth_date: str
+    sex: str
+    city: str
     governorate: str
-
-    class Config:
-        orm_mode = True
-
-
-class PatientOUT(Patient):
-    ...
+    phone: str
