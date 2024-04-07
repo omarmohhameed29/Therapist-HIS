@@ -28,11 +28,11 @@ class PatientCreate(BaseModel):
 
 # Pydantic model for updating a patient
 class PatientUpdate(BaseModel):
-    first_name: str
-    last_name: str
-    birth_date: str
-    sex: str
-    city: str
+    first_name: Optional[str]
+    last_name: Optional[str]
+    birth_date: Optional[str]
+    sex: Optional[str]
+    city: Optional[str]
 
 
 
@@ -62,3 +62,23 @@ class TherapistUpdate(BaseModel):
     last_name: Optional[str] 
     specialization: Optional[str]
     hour_rate: Optional[float]
+
+
+class ReceptionistCreate(BaseModel):
+    first_name: str
+    last_name: str
+    SSN: str
+    birth_date: str
+    sex: str
+    phone: str
+    email: EmailStr
+    password: str
+
+class ReceptionistResponse(BaseModel):
+    first_name: str
+    last_name: str
+    phone: str
+
+class ReceptionistUpdate(BaseModel):
+    first_name: Optional[str]
+    last_name: Optional[str] 

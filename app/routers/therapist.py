@@ -8,7 +8,7 @@ router = APIRouter(
 
 
 @router.get('/therapists', response_model=list[schemas.TherapistResponse])
-def get_posts(db: SessionLocal = Depends(get_db)):
+def get_therapists(db: SessionLocal = Depends(get_db)):
     result = db.query(models.Therapist).all()
     return result
 
@@ -22,7 +22,7 @@ def create_therapist(therapist_data: schemas.TherapistCreate, db: SessionLocal =
 
 
 @router.delete("/therapists/{therapist_id}")
-def delete_patient(therapist_id: int, db: SessionLocal = Depends(get_db)):
+def delete_therapist(therapist_id: int, db: SessionLocal = Depends(get_db)):
     # Check if the patient exists
     existing_therapist = db.query(models.Therapist).filter(models.Therapist.therapist_id == therapist_id).first()
     if existing_therapist is None:
