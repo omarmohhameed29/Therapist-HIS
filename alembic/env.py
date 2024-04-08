@@ -11,7 +11,7 @@ from app.models import Base
 config = context.config
 config.set_main_option(
     "sqlalchemy.url", 
-    "postgresql://therapistdb_owner:DKqcQ95rpZHg@ep-holy-morning-a5uegoes.us-east-2.aws.neon.tech/therapistdb?sslmode=require"
+    "postgresql://therapistdb_owner:DKqcQ95rpZHg@ep-winter-dawn-a5sqe29h.us-east-2.aws.neon.tech/therapistdb?sslmode=require"
 )
 
 # Interpret the config file for Python logging.
