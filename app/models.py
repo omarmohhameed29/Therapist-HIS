@@ -16,7 +16,7 @@ class Patient(Base):
     ssn = Column(String, unique=True)
     phone = Column(String, unique=True)
     birth_date = Column(DATE, nullable=False)
-    sex = Column(String, nullable=False)
+    gender = Column(String, nullable=False)
     city = Column(String, nullable=False)
     governorate = Column(String, nullable=False)
 
@@ -30,7 +30,7 @@ class Receptionist(Base):
     SSN = Column(String, unique=True, nullable=False)
     phone = Column(String, nullable=False)
     birth_date = Column(DATE)
-    sex = Column(String)
+    gender = Column(String)
     email = Column(String)
     password = Column(String)
 
@@ -45,7 +45,7 @@ class Therapist(Base):
     SSN = Column(String, unique=True, nullable=False)
     phone = Column(String, nullable=False)
     birth_date = Column(DATE)
-    sex = Column(String)
+    gender = Column(String)
     specialization = Column(String)
     city = Column(String)
     government = Column(String)

@@ -12,7 +12,7 @@ class PatientResponse(BaseModel):
     last_name: str
     ssn: str
     birth_date: date 
-    sex: str
+    gender: str
     phone: str
 
 
@@ -21,7 +21,7 @@ class PatientCreate(BaseModel):
     first_name: str
     last_name: str
     birth_date: str
-    sex: str
+    gender: str
     city: str
     governorate: str
     phone: str
@@ -31,7 +31,7 @@ class PatientUpdate(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
     birth_date: Optional[str]
-    sex: Optional[str]
+    gender: Optional[str]
     city: Optional[str]
 
 
@@ -41,7 +41,7 @@ class TherapistCreate(BaseModel):
     last_name: str
     SSN: str
     birth_date: str
-    sex: str
+    gender: str
     city: str
     government: str
     phone: str
@@ -69,7 +69,7 @@ class ReceptionistCreate(BaseModel):
     last_name: str
     SSN: str
     birth_date: str
-    sex: str
+    gender: str
     phone: str
     email: EmailStr
     password: str
