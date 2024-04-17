@@ -106,6 +106,8 @@ class SessionCreate(BaseModel):
 class SessionResponse(SessionCreate):
     session_id: int
 
-# class SessionUpdate(BaseModel):
-#     first_name: Optional[str]
-#     last_name: Optional[str]
+class SessionUpdate(BaseModel):
+    summary: Optional[str]
+    prescription: Optional[str]
+    duration: Optional[int]
+    hour_price: Optional[int]

@@ -37,17 +37,17 @@ def delete_session(session_id: int, db: SessionLocal = Depends(get_db)):
     return {"message": "session deleted successfully"}
 
 
-# @router.put("/therapists/{therapist_id}", response_model=schemas.TherapistResponse)
-# def update_therapist(therapist_id: int, therapist_data: schemas.TherapistUpdate, db: SessionLocal = Depends(get_db)):
-#     # Check if the therapist exists
-#     existing_therapist = db.query(models.Therapist).filter(models.Therapist.therapist_id == therapist_id).first()
-#     if existing_therapist is None:
-#         raise HTTPException(status_code=404, detail="Therapist not found")
+@router.put("/sessions/{session_id}", response_model=schemas.SessionResponse)
+def update_session(session_id: int, session_data: schemas.SessionUpdate, db: SessionLocal = Depends(get_db)):
+    # Check if the session exists
+    existing_session = db.query(models.Session).filter(models.Session.session_id == session_id).first()
+    if existing_session is None:
+        raise HTTPException(status_code=404, detail="Session not found")
 
-#     # Update the therapist data
-#     for field, value in therapist_data.dict(exclude_unset=True).items():
-#         setattr(existing_therapist, field, value)
+    # Update session data
+    for field, value in session_data.dict(exclude_unset=True).items():
+        setattr(existing_session, field, value)
 
-#     db.commit()
-#     db.refresh(existing_therapist)
-#     return existing_therapist
+    db.commit()
+    db.refresh(existing_session)
+    return existing_session

@@ -32,13 +32,13 @@ def create_receptionist(receptionist_data: schemas.ReceptionistCreate, db: Sessi
 
 @router.delete("/receptionists/{receptionist_id}")
 def delete_receptionist(receptionist_id: int, db: SessionLocal = Depends(get_db)):
-    # Check if the patient exists
+    # Check if the receptionist exists
     existing_receptionist = db.query(models.Receptionist).filter(models.Receptionist.receptionist_id == receptionist_id).first()
     if existing_receptionist is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID Not Exists")
 
 
-    # Delete the patient
+    # Delete the receptionist
     db.delete(existing_receptionist)
     db.commit()
 
@@ -47,12 +47,12 @@ def delete_receptionist(receptionist_id: int, db: SessionLocal = Depends(get_db)
 
 @router.put("/receptionists/{receptionist_id}", response_model=schemas.ReceptionistResponse)
 def update_receptionist(receptionist_id: int, receptionist_data: schemas.ReceptionistUpdate, db: SessionLocal = Depends(get_db)):
-    # Check if the therapist exists
+    # Check if the receptionist exists
     existing_receptionist = db.query(models.Receptionist).filter(models.Receptionist.receptionist_id == receptionist_id).first()
     if existing_receptionist is None:
         raise HTTPException(status_code=404, detail="Receptionist not found")
 
-    # Update the therapist data
+    # Update the receptionist data
     for field, value in receptionist_data.dict(exclude_unset=True).items():
         setattr(existing_receptionist, field, value)
 
