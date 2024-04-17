@@ -111,3 +111,21 @@ class SessionUpdate(BaseModel):
     prescription: Optional[str]
     duration: Optional[int]
     hour_price: Optional[int]
+
+
+
+class BillCreate(BaseModel):
+    session_id: int
+    payment_status: str
+    issue_date_time: datetime
+    amount: float
+    # payment_method: str
+
+
+class BillResponse(BillCreate):
+    bill_id: int
+
+
+class BillUpdate(BaseModel):
+    payment_status: str
+
