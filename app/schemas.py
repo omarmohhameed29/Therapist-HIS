@@ -91,3 +91,21 @@ class ReceptionistResponse(BaseModel):
 class ReceptionistUpdate(BaseModel):
     first_name: Optional[str]
     last_name: Optional[str]
+
+
+
+class SessionCreate(BaseModel):
+    appointment_id: int
+    duration: float
+    hour_price: float
+    summary: str
+    transcription: str
+    prescription: Optional[str]
+
+
+class SessionResponse(SessionCreate):
+    session_id: int
+
+# class SessionUpdate(BaseModel):
+#     first_name: Optional[str]
+#     last_name: Optional[str]
