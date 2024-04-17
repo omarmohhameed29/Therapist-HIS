@@ -7,6 +7,7 @@ from typing import Optional
 # Class Patient(BaseException)
 
 class PatientResponse(BaseModel):
+    patient_id: int
     first_name: str
     last_name: str
     ssn: str
@@ -54,6 +55,7 @@ class TherapistCreate(BaseModel):
 
 
 class TherapistResponse(BaseModel):
+    therapist_id: int
     first_name: str
     last_name: str
     phone: str
@@ -80,6 +82,7 @@ class ReceptionistCreate(BaseModel):
 
 
 class ReceptionistResponse(BaseModel):
+    receptionist_id: int
     first_name: str
     last_name: str
     phone: str
