@@ -32,13 +32,13 @@ def create_therapist(therapist_data: schemas.TherapistCreate, db: SessionLocal =
 
 @router.delete("/therapists/{therapist_id}")
 def delete_therapist(therapist_id: int, db: SessionLocal = Depends(get_db)):
-    # Check if the patient exists
+    # Check if the therapist exists
     existing_therapist = db.query(models.Therapist).filter(models.Therapist.therapist_id == therapist_id).first()
     if existing_therapist is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID Not Exists")
 
 
-    # Delete the patient
+    # Delete the therapist
     db.delete(existing_therapist)
     db.commit()
 
