@@ -7,10 +7,49 @@ router = APIRouter(
 )
 
 
-@router.get('/bills', response_model=list[schemas.BillResponse])
-def get_therapists(db: SessionLocal = Depends(get_db)):
-    result = db.query(models.Bill).all()
-    return result
+# @router.get('/bills', response_model=list[schemas.BillResponse])
+@router.get('/bills')
+def get_bills_with_details(db: SessionLocal = Depends(get_db)):
+    """
+    Retrieves bills along with associated therapist and patient information.
+    """
+    # Define aliases for the tables
+    Bill = models.Bill
+    SessionModel = models.Session
+    Appointment = models.Appointment
+    Therapist = models.Therapist
+    Patient = models.Patient
+
+    # Query bills along with associated session, appointment, therapist, and patient information
+    query = db.query(Bill.bill_id, Patient.first_name, Patient.last_name,
+                     Therapist.first_name, Therapist.last_name,
+                     Bill.amount, Bill.payment_status, Bill.issue_date_time).\
+        join(SessionModel, Bill.session_id == SessionModel.session_id).\
+        join(Appointment, SessionModel.appointment_id == Appointment.appointment_id).\
+        join(Therapist, Appointment.therapist_id == Therapist.therapist_id).\
+        join(Patient, Appointment.patient_id == Patient.patient_id)
+
+    # Execute the query and fetch the result
+    result = query.all()
+
+    # Extract amount and issue_date_time from the result without their data types
+    extracted_data = []
+    for row in result:
+        data_without_amount_issue = {
+            "bill_id": row[0],
+            "patient_first_name": row[1],
+            "patient_last_name": row[2],
+            "therapist_first_name": row[3],
+            "therapist_last_name": row[4],
+            "payment_status": row[6],
+        }
+        data_without_amount_issue["amount"] = row[5]  # Add amount separately
+        data_without_amount_issue["issue_date_time"] = row[7]  # Add issue_date_time separately
+        extracted_data.append(data_without_amount_issue)
+
+    return extracted_data
+
+
 
 @router.post("/bills", response_model=schemas.BillResponse, status_code=201)
 def create_therapist(bill_data: schemas.BillCreate, db: SessionLocal = Depends(get_db)):
