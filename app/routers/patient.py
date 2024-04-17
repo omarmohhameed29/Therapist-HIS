@@ -10,6 +10,16 @@ router = APIRouter(
 @router.post("/patients", response_model=schemas.PatientResponse)
 def create_patient(patient_data: schemas.PatientCreate, db: SessionLocal = Depends(get_db)):
     db_item = models.Patient(**patient_data.model_dump())
+    
+    
+    existing_patient_with_ssn = db.query(models.Patient).filter(models.Patient.ssn == db_item.ssn).first()
+    existing_patient_with_phone = db.query(models.Patient).filter(models.Patient.phone == db_item.phone).first()
+
+    if existing_patient_with_ssn:
+        raise HTTPException (status_code=status.HTTP_409_CONFLICT, detail="SSN already exists")
+    if existing_patient_with_phone:
+        raise HTTPException (status_code=status.HTTP_409_CONFLICT, detail="Phone already exists")
+
     db.add(db_item)
     db.commit()
     db.refresh(db_item)

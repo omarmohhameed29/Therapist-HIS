@@ -15,6 +15,15 @@ def get_therapists(db: SessionLocal = Depends(get_db)):
 @router.post("/therapists", response_model=schemas.TherapistResponse, status_code=201)
 def create_therapist(therapist_data: schemas.TherapistCreate, db: SessionLocal = Depends(get_db)):
     db_therapist = models.Therapist(**therapist_data.model_dump())
+    existing_therapist_with_ssn = db.query(models.Therapist).filter(models.Therapist.SSN == therapist_data.SSN).first()
+    existing_therapist_with_phone = db.query(models.Therapist).filter(models.Therapist.phone == therapist_data.phone).first()
+
+    if existing_therapist_with_ssn:
+        raise HTTPException (status_code=status.HTTP_409_CONFLICT, detail="SSN already exists")
+    if existing_therapist_with_phone:
+        raise HTTPException (status_code=status.HTTP_409_CONFLICT, detail="Phone already exists")
+
+
     db.add(db_therapist)
     db.commit()
     db.refresh(db_therapist)

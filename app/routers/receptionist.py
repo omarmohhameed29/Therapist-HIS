@@ -15,6 +15,15 @@ def get_receptionists(db: SessionLocal = Depends(get_db)):
 @router.post("/receptionists", response_model=schemas.ReceptionistResponse, status_code=201)
 def create_receptionist(receptionist_data: schemas.ReceptionistCreate, db: SessionLocal = Depends(get_db)):
     db_receptionist_data = models.Receptionist(**receptionist_data.model_dump())
+    
+    existing_receptionist_with_ssn = db.query(models.Receptionist).filter(models.Receptionist.SSN == db_receptionist_data.SSN).first()
+    existing_receptionist_with_phone = db.query(models.Receptionist).filter(models.Receptionist.phone == db_receptionist_data.phone).first()
+
+    if existing_receptionist_with_ssn:
+        raise HTTPException (status_code=status.HTTP_409_CONFLICT, detail="SSN already exists")
+    if existing_receptionist_with_phone:
+        raise HTTPException (status_code=status.HTTP_409_CONFLICT, detail="Phone already exists")
+        
     db.add(db_receptionist_data)
     db.commit()
     db.refresh(db_receptionist_data)
