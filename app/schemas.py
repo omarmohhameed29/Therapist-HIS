@@ -129,3 +129,8 @@ class BillResponse(BillCreate):
 class BillUpdate(BaseModel):
     payment_status: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    role:str
+
