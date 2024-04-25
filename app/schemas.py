@@ -1,10 +1,11 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, constr
 from pydantic.types import conint
 from datetime import datetime, date
 from typing import Optional
 
 
 # Class Patient(BaseException)
+
 
 class PatientResponse(BaseModel):
     patient_id: int
@@ -27,6 +28,7 @@ class PatientCreate(BaseModel):
     city: str
     governorate: str
     phone: str
+
 
 # Pydantic model for updating a patient
 
@@ -70,6 +72,30 @@ class TherapistUpdate(BaseModel):
     hour_rate: Optional[float]
 
 
+class TherapistAvailabilityCreate(BaseModel):
+    therapist_id: int
+    date: str
+    start_time: datetime
+    end_time: datetime
+    status: str
+
+
+class TherapistAvailabilityResponse(TherapistAvailabilityCreate):
+    availability_id: int
+    therapist_id: int
+    date: date
+    start_time: datetime
+    end_time: datetime
+    status: str
+
+
+class TherapistAvailabilityUpdate(BaseModel):
+    date: Optional[str]
+    start_time: Optional[datetime]
+    end_time: Optional[datetime]
+    status: Optional[str]
+
+
 class ReceptionistCreate(BaseModel):
     first_name: str
     last_name: str
@@ -93,7 +119,6 @@ class ReceptionistUpdate(BaseModel):
     last_name: Optional[str]
 
 
-
 class SessionCreate(BaseModel):
     appointment_id: int
     duration: float
@@ -106,12 +131,12 @@ class SessionCreate(BaseModel):
 class SessionResponse(SessionCreate):
     session_id: int
 
+
 class SessionUpdate(BaseModel):
     summary: Optional[str]
     prescription: Optional[str]
     duration: Optional[int]
     hour_price: Optional[int]
-
 
 
 class BillCreate(BaseModel):
@@ -129,8 +154,35 @@ class BillResponse(BillCreate):
 class BillUpdate(BaseModel):
     payment_status: str
 
+
+class AppointmentCreate(BaseModel):
+    therapist_id: int
+    patient_id: int
+    issued_by: int
+    date_and_time: datetime
+    type: str
+    status: str = "Scheduled"
+
+
+class AppointmentResponse(AppointmentCreate):
+    appointment_id: int
+    therapist_id: int
+    patient_id: int
+    issued_by: int
+    date_and_time: datetime
+    type: str
+    status: str
+
+
+class AppointmentUpdate(BaseModel):
+    therapist_id: Optional[int]
+    patient_id: Optional[int]
+    issued_by: Optional[int]
+    date_and_time: Optional[int]
+    type: Optional[str]
+
+
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
-    role:str
-
+    role: str
