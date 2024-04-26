@@ -42,9 +42,9 @@ class PatientUpdate(BaseModel):
 
 
 class TherapistCreate(BaseModel):
+    SSN: str
     first_name: str
     last_name: str
-    SSN: str
     birth_date: str
     gender: str
     city: str
@@ -57,12 +57,18 @@ class TherapistCreate(BaseModel):
 
 
 class TherapistResponse(BaseModel):
+    SSN: str
     therapist_id: int
     first_name: str
     last_name: str
-    phone: str
     specialization: str
     hour_rate: float
+    birth_date: date
+    gender: str
+    phone: str
+    city: str
+    government: str
+    email: EmailStr
 
 
 class TherapistUpdate(BaseModel):
