@@ -81,8 +81,8 @@ class TherapistUpdate(BaseModel):
 class TherapistAvailabilityCreate(BaseModel):
     therapist_id: int
     date: str
-    start_time: datetime
-    end_time: datetime
+    start_time: str
+    end_time: str
     status: str
 
 

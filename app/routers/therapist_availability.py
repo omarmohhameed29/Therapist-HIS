@@ -4,6 +4,7 @@ from typing import Optional, List
 from .. import models, schemas
 from ..database import engine, SessionLocal, get_db
 from ..exceptions import NotFoundException, BadRequestException
+from anyio import to_thread
 from sqlalchemy import and_  # Import and_ function
 
 
@@ -15,6 +16,13 @@ router = APIRouter(tags=["Therapist Availability"])
 )
 def get_availability(db: SessionLocal = Depends(get_db)):
     result = db.query(models.TherapistAvailability).all()
+    return result
+
+
+@router.get('/availabilities/{therapist_id}', response_model=list[schemas.TherapistAvailabilityResponse])
+def get_therapist_availabilities(therapist_id: int, db: SessionLocal = Depends(get_db)):
+    result = db.query(models.TherapistAvailability).filter(
+        models.TherapistAvailability.therapist_id == therapist_id).all()
     return result
 
 
@@ -66,6 +74,34 @@ def create_availability(
     db.commit()
     db.refresh(db_availability)
     return db_availability
+
+
+@router.post("/set-availabilities/{therapist_id}")
+def set_availabilities(
+    therapist_id: int,
+    availabilities: List[schemas.TherapistAvailabilityCreate],
+    db: SessionLocal = Depends(get_db),
+):
+    # Check if therapist exists
+    existing_therapist = db.query(models.Therapist).filter(
+        models.Therapist.therapist_id == therapist_id
+    ).first()
+    if not existing_therapist:
+        raise NotFoundException(detail="Therapist ID not found.")
+
+    # clear doctor's availability
+    db.query(models.TherapistAvailability).filter(
+        models.TherapistAvailability.therapist_id == therapist_id).delete()
+
+    # Create TherapistAvailability instances
+    db_availabilities = [
+        models.TherapistAvailability(**availability.dict()) for availability in availabilities
+    ]
+
+    db.add_all(db_availabilities)
+    db.commit()
+    db.refresh(db_availabilities)
+    return db_availabilities
 
 
 @router.delete("/availabilities/{availability_id}")
@@ -156,7 +192,8 @@ def update_availability(
     for field, value in availability_data.dict(exclude_unset=True).items():
         if field == "status":
             # If status is not provided or has an invalid value, default to "Available"
-            value = value if value in ["Available", "Unavailable"] else "Available"
+            value = value if value in [
+                "Available", "Unavailable"] else "Available"
         setattr(existing_availability, field, value)
 
     db.commit()
