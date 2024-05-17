@@ -164,28 +164,24 @@ class BillUpdate(BaseModel):
 class AppointmentCreate(BaseModel):
     therapist_id: int
     patient_id: int
-    issued_by: int
-    date_and_time: datetime
-    type: str
-    status: str = "Scheduled"
+    date: str
+    start: str
+    end: str
 
 
 class AppointmentResponse(AppointmentCreate):
     appointment_id: int
     therapist_id: int
     patient_id: int
-    issued_by: int
-    date_and_time: datetime
-    type: str
-    status: str
+    date: date
+    start: datetime
+    end: datetime
 
 
 class AppointmentUpdate(BaseModel):
-    therapist_id: Optional[int]
-    patient_id: Optional[int]
-    issued_by: Optional[int]
-    date_and_time: Optional[int]
-    type: Optional[str]
+    date: Optional[date]
+    start: Optional[datetime]
+    end: Optional[datetime]
 
 
 class UserLogin(BaseModel):

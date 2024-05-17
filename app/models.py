@@ -56,8 +56,9 @@ class TherapistAvailability(Base):
     __tablename__ = "therapist_availability"
 
     availability_id = Column(Integer, primary_key=True)
-    therapist_id = Column(Integer, ForeignKey(
-        'therapist.therapist_id', ondelete="CASCADE"))
+    therapist_id = Column(
+        Integer, ForeignKey("therapist.therapist_id", ondelete="CASCADE")
+    )
     date = Column(DATE)
     start = Column(String)
     end = Column(String)
@@ -68,23 +69,22 @@ class Appointment(Base):
     __tablename__ = "appointment"
 
     appointment_id = Column(Integer, primary_key=True)
-    therapist_id = Column(Integer, ForeignKey(
-        'therapist.therapist_id', ondelete="CASCADE"))
-    patient_id = Column(Integer, ForeignKey(
-        'patient.patient_id', ondelete="CASCADE"))
-    issued_by = Column(Integer, ForeignKey(
-        'receptionist.receptionist_id', ondelete="CASCADE"))
-    date_and_time = Column(DateTime)
-    type = Column(String)
-    status = Column(String)
+    therapist_id = Column(
+        Integer, ForeignKey("therapist.therapist_id", ondelete="CASCADE")
+    )
+    patient_id = Column(Integer, ForeignKey("patient.patient_id", ondelete="CASCADE"))
+    date = Column(DATE)
+    start = Column(String)
+    end = Column(String)
 
 
 class Session(Base):
     __tablename__ = "session"
 
     session_id = Column(Integer, primary_key=True)
-    appointment_id = Column(Integer, ForeignKey(
-        'appointment.appointment_id', ondelete="CASCADE"))
+    appointment_id = Column(
+        Integer, ForeignKey("appointment.appointment_id", ondelete="CASCADE")
+    )
     transcription = Column(String)
     summary = Column(String)
     duration = Column(NUMERIC)
@@ -97,8 +97,7 @@ class Bill(Base):
     __tablename__ = "bill"
 
     bill_id = Column(Integer, primary_key=True)
-    session_id = Column(Integer, ForeignKey(
-        'session.session_id', ondelete="CASCADE"))
+    session_id = Column(Integer, ForeignKey("session.session_id", ondelete="CASCADE"))
     payment_status = Column(String)
     issue_date_time = Column(DateTime)
     amount = Column(NUMERIC)
