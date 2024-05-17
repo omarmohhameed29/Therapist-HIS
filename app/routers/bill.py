@@ -52,7 +52,7 @@ def get_bills_with_details(db: SessionLocal = Depends(get_db)):
 
 
 @router.post("/bills", response_model=schemas.BillResponse, status_code=201)
-def create_therapist(bill_data: schemas.BillCreate, db: SessionLocal = Depends(get_db)):
+def create_bill(bill_data: schemas.BillCreate, db: SessionLocal = Depends(get_db)):
     db_bill = models.Bill(**bill_data.model_dump())
 
     db.add(db_bill)
@@ -62,7 +62,7 @@ def create_therapist(bill_data: schemas.BillCreate, db: SessionLocal = Depends(g
 
 
 @router.delete("/bills/{bill_id}")
-def delete_session(bill_id: int, db: SessionLocal = Depends(get_db)):
+def delete_bill(bill_id: int, db: SessionLocal = Depends(get_db)):
     # Check if the bill exists
     existing_bill = db.query(models.Bill).filter(models.Bill.bill_id == bill_id).first()
     if existing_bill is None:
@@ -77,7 +77,7 @@ def delete_session(bill_id: int, db: SessionLocal = Depends(get_db)):
 
 
 @router.put("/bills/{bill_id}", response_model=schemas.BillResponse)
-def update_session(bill_id: int, bill_data: schemas.BillUpdate, db: SessionLocal = Depends(get_db)):
+def update_bill(bill_id: int, bill_data: schemas.BillUpdate, db: SessionLocal = Depends(get_db)):
     # Check if the bill exists
     existing_bill = db.query(models.Bill).filter(models.Bill.bill_id == bill_id).first()
     if existing_bill is None:
