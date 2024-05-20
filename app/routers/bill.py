@@ -26,7 +26,8 @@ def get_bills_with_details(db: SessionLocal = Depends(get_db)):
                      Bill.amount, Bill.payment_status, Bill.issue_date_time, Bill.payment_method).\
         join(Appointment, Bill.appointment_id == Appointment.appointment_id).\
         join(Therapist, Appointment.therapist_id == Therapist.therapist_id).\
-        join(Patient, Appointment.patient_id == Patient.patient_id)
+        join(Patient, Appointment.patient_id == Patient.patient_id).\
+        order_by(Bill.issue_date_time.desc())
 
     # Execute the query and fetch the result
     result = query.all()
