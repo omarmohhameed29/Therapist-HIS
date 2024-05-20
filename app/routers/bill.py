@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from .. import models, schemas
 from ..database import engine, SessionLocal, get_db
-import json
 
 router = APIRouter(
     tags=['Bill']

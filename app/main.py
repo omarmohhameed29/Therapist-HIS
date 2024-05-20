@@ -10,6 +10,7 @@ from .routers import (
     auth,
     appointment,
     therapist_availability,
+    statistics
 )
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -34,3 +35,5 @@ app.include_router(session.router)
 app.include_router(appointment.router)
 app.include_router(bill.router)
 app.include_router(auth.router)
+app.include_router(statistics.router)
+
