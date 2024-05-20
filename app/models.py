@@ -82,15 +82,11 @@ class Session(Base):
     __tablename__ = "session"
 
     session_id = Column(Integer, primary_key=True)
-    appointment_id = Column(
-        Integer, ForeignKey("appointment.appointment_id", ondelete="CASCADE")
-    )
-    transcription = Column(String)
-    summary = Column(String)
+    patient_id = Column(Integer, ForeignKey("patient.patient_id", ondelete="CASCADE"))
+    therapist_id = Column(Integer, ForeignKey("therapist.therapist_id", ondelete="CASCADE"))
     duration = Column(NUMERIC)
-    examination_result = Column(String)
-    prescription = Column(String)
-    hour_price = Column(NUMERIC)
+    date_time = Column(DateTime)
+    notes = Column(String)
 
 
 class Bill(Base):
