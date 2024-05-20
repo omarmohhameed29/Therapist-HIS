@@ -137,9 +137,9 @@ class Session(BaseModel):
 class SessionCreate(BaseModel):
     therapist_id: int
     patient_id: int
-    duration: float
+    duration: Optional[float]
     date_time: datetime
-    notes: str
+    notes: Optional[str]
 
 
 class SessionResponse(SessionCreate):
@@ -147,10 +147,11 @@ class SessionResponse(SessionCreate):
 
 
 class SessionUpdate(BaseModel):
-    summary: Optional[str]
-    prescription: Optional[str]
-    duration: Optional[int]
-    hour_price: Optional[int]
+    patient_id: Optional[int]
+    therapist_id: Optional[int]
+    duration: Optional[float]
+    notes: Optional[str]
+    date_time: Optional[datetime]
 
 
 class BillCreate(BaseModel):
