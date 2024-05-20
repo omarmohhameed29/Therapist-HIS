@@ -93,8 +93,8 @@ class Bill(Base):
     __tablename__ = "bill"
 
     bill_id = Column(Integer, primary_key=True)
-    appointment_id = Column(
-        Integer, ForeignKey("appointment.appointment_id", ondelete="CASCADE")
+    session_id = Column(
+        Integer, ForeignKey("session.session_id", ondelete="CASCADE")
     )
     payment_status = Column(String)
     issue_date_time = Column(DateTime)

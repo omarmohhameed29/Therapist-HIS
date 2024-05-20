@@ -155,7 +155,7 @@ class SessionUpdate(BaseModel):
 
 
 class BillCreate(BaseModel):
-    appointment_id: int
+    session_id: int
     payment_status: str
     issue_date_time: datetime
     amount: float
