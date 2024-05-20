@@ -36,14 +36,14 @@ def get_bills_with_details(db: SessionLocal = Depends(get_db)):
     extracted_data = []
     for row in result:
         data_without_amount_issue = {
-            "bill_id": row[0],
-            "patient_name": row[1] + ' ' +row[2],
-            "therapist_name": row[3] + ' ' + row[4],
-            "payment_status": row[6],
-            "payment_method": row[8]
+            "id": row[0],
+            "patient": row[1] + ' ' +row[2],
+            "doctor": row[3] + ' ' + row[4],
+            "status": row[6],
+            "paymentMethod": row[8]
         }
         data_without_amount_issue["amount"] = row[5]  # Add amount separately
-        data_without_amount_issue["issue_date_time"] = row[7]  # Add issue_date_time separately
+        data_without_amount_issue["paymentDate"] = row[7]  # Add issue_date_time separately
         data_without_amount_issue["session_id"] = row[9]  # Add issue_date_time separately
 
         extracted_data.append(data_without_amount_issue)
@@ -74,6 +74,7 @@ def generate_bill_from_session_id(session_id: int, db: SessionLocal = Depends(ge
 
     # Query the session information
     session = db.query(SessionModel).filter(SessionModel.session_id == session_id).first()
+    session.session_complete = True
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 

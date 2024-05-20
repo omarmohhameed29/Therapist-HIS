@@ -17,7 +17,7 @@ def get_sessions(db: SessionLocal = Depends(get_db)):
     # Query bills along with associated session, appointment, therapist, and patient information
     query = db.query(Patient.first_name, Patient.last_name,
                      Therapist.first_name, Therapist.last_name,
-                     SessionModel.session_id, SessionModel.notes, SessionModel.duration, SessionModel.date_time, Patient.patient_id, Therapist.therapist_id) .\
+                     SessionModel.session_id, SessionModel.notes, SessionModel.duration, SessionModel.date_time, Patient.patient_id, Therapist.therapist_id, SessionModel.session_complete) .\
         join(Therapist, SessionModel.therapist_id == Therapist.therapist_id).\
         join(Patient, SessionModel.patient_id == Patient.patient_id)
 
@@ -37,6 +37,7 @@ def get_sessions(db: SessionLocal = Depends(get_db)):
         data_without_amount_issue["date_time"] = row[7]
         data_without_amount_issue["patient_id"] = row[8]  
         data_without_amount_issue["therapist_id"] = row[9]  
+        data_without_amount_issue["session_complete"] = row[10]  
         extracted_data.append(data_without_amount_issue)
     print(extracted_data)
     return extracted_data
@@ -55,12 +56,13 @@ def get_session_by_id(session_id: int, db: SessionLocal = Depends(get_db)):
         SessionModel.notes,
         SessionModel.duration,
         SessionModel.date_time,
+        SessionModel.session_complete,
         Patient.first_name.label('patient_first_name'),
         Patient.last_name.label('patient_last_name'),
         Therapist.first_name.label('therapist_first_name'),
         Therapist.last_name.label('therapist_last_name'),
         Therapist.therapist_id.label('therapist_id'),
-        Patient.patient_id.label('patient_id')
+        Patient.patient_id.label('patient_id'),
     ).join(Therapist, SessionModel.therapist_id == Therapist.therapist_id)\
      .join(Patient, SessionModel.patient_id == Patient.patient_id)\
      .filter(SessionModel.session_id == session_id)
@@ -73,6 +75,7 @@ def get_session_by_id(session_id: int, db: SessionLocal = Depends(get_db)):
     # Construct the response
     response = {
         "session_id": result.session_id,
+        "session_complete": result.session_complete,
         "notes": result.notes,
         "duration": result.duration,
         "date_time": result.date_time,
@@ -95,6 +98,7 @@ def get_sessions_by_therapist_id(therapist_id: int, db: SessionLocal = Depends(g
     # Query the sessions for the given therapist along with associated patient information
     query = db.query(
         SessionModel.session_id,
+        SessionModel.session_complete,
         SessionModel.notes,
         SessionModel.duration,
         SessionModel.date_time,
@@ -117,13 +121,14 @@ def get_sessions_by_therapist_id(therapist_id: int, db: SessionLocal = Depends(g
     response = [
         {
             "session_id": result.session_id,
+            "session_complete": result.session_complete,
             "notes": result.notes,
             "duration": result.duration,
             "date_time": result.date_time,
             "patient_name": f"{result.patient_first_name} {result.patient_last_name}",
             "therapist_name": f"{result.therapist_first_name} {result.therapist_last_name}",
             "patient_id": result.patient_id,
-            "therapist_id": result.therapist_id
+            "therapist_id": result.therapist_id,
         } for result in results
     ]
 

@@ -87,6 +87,7 @@ class Session(Base):
     duration = Column(NUMERIC)
     date_time = Column(DateTime)
     notes = Column(String)
+    session_complete = Column(Boolean)
 
 
 class Bill(Base):
