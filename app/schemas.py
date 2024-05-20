@@ -125,13 +125,21 @@ class ReceptionistUpdate(BaseModel):
     last_name: Optional[str]
 
 
-class SessionCreate(BaseModel):
-    appointment_id: int
+class Session(BaseModel):
+    session_id: int
+    therapist_id: int
+    patient_id: int
     duration: float
-    hour_price: float
-    summary: str
-    transcription: str
-    prescription: Optional[str]
+    date_time: datetime
+    notes: str
+
+
+class SessionCreate(BaseModel):
+    therapist_id: int
+    patient_id: int
+    duration: float
+    date_time: datetime
+    notes: str
 
 
 class SessionResponse(SessionCreate):
