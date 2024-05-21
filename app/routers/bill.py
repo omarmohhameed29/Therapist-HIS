@@ -66,17 +66,7 @@ def get_bill_by_id(bill_id: int, db: SessionLocal = Depends(get_db)):
     Therapist = models.Therapist
     Patient = models.Patient
 
-    # Query bills along with associated session, appointment, therapist, and patient information
-    query = db.query(Bill.bill_id, Patient.first_name, Patient.last_name,
-                     Therapist.first_name, Therapist.last_name,Therapist.specialization,
-                     Bill.amount, Bill.payment_status, Bill.issue_date_time, Bill.payment_method, SessionModel.session_id, Therapist.specialization).\
-        join(SessionModel, Bill.session_id == SessionModel.session_id).\
-        join(Therapist, SessionModel.therapist_id == Therapist.therapist_id).\
-        join(Patient, SessionModel.patient_id == Patient.patient_id).\
-        filter(Bill.bill_id == bill_id)
-
-    
-    # Query the session along with associated therapist and patient information
+    # Query bills along with associated session, therapist, and patient information
     query = db.query(
         Bill.bill_id,
         Patient.first_name.label('patient_first_name'),
@@ -89,27 +79,29 @@ def get_bill_by_id(bill_id: int, db: SessionLocal = Depends(get_db)):
         Bill.issue_date_time,
         Bill.payment_method,
         SessionModel.session_id,
-        Therapist.specialization,
-    ).join(Therapist, SessionModel.therapist_id == Therapist.therapist_id)\
+        SessionModel.duration,
+        Therapist.hour_rate
+    ).join(SessionModel, Bill.session_id == SessionModel.session_id)\
+     .join(Therapist, SessionModel.therapist_id == Therapist.therapist_id)\
      .join(Patient, SessionModel.patient_id == Patient.patient_id)\
-     .filter(Bill.bill_id == bill_id)
+     .filter(Bill.bill_id == bill_id).first()
 
-    result = query.first()
-
-    if not result:
-        raise HTTPException(status_code=404, detail="Session not found")
+    if not query:
+        raise HTTPException(status_code=404, detail="Bill not found")
 
     # Construct the response
     response = {
-        "id": result.bill_id,
-        "patient": f"{result.patient_first_name} {result.patient_last_name}",
-        "doctor": f"{result.therapist_first_name} {result.therapist_last_name}",
-        "specialization": result.specialization,
-        "status": result.payment_status,
-        "paymentMethod": result.payment_method,
-        "amount": result.amount,
-        "paymentDate": result.issue_date_time,
-        "session_id": result.session_id 
+        "id": query.bill_id,
+        "patient": f"{query.patient_first_name} {query.patient_last_name}",
+        "doctor": f"{query.therapist_first_name} {query.therapist_last_name}",
+        "specialization": query.specialization,
+        "status": query.payment_status,
+        "paymentMethod": query.payment_method,
+        "amount": query.amount,
+        "paymentDate": query.issue_date_time,
+        "session_id": query.session_id,
+        "duration": query.duration,
+        "hour_rate": query.hour_rate
     }
 
     return response
