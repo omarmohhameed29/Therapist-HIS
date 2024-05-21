@@ -18,7 +18,7 @@ def get_sessions_summary(db: SessionLocal = Depends(get_db)):
     total_sessions = db.query(func.count(SessionModel.session_id)).scalar()
 
     # Query to sum the total amount paid from bills
-    total_amount_paid = db.query(func.sum(Bill.amount)).filter(Bill.payment_status == 'Paid').scalar()
+    total_amount_paid = db.query(func.sum(Bill.amount)).filter(Bill.payment_status == 'paid').scalar()
 
     # Query to calculate the average session duration
     average_duration = db.query(func.avg(SessionModel.duration)).scalar()
