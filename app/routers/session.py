@@ -6,6 +6,7 @@ router = APIRouter(
     tags=['Session']
 )
 
+
 @router.get("/session")
 def get_sessions(db: SessionLocal = Depends(get_db)):
     # Define aliases for the tables
@@ -28,16 +29,18 @@ def get_sessions(db: SessionLocal = Depends(get_db)):
     extracted_data = []
     for row in result:
         data_without_amount_issue = {
-            "patient_name": row[0] + ' ' +row[1],
+            "patient_name": row[0] + ' ' + row[1],
             "therapist_name": row[2] + ' ' + row[3],
         }
-        data_without_amount_issue["session_id"] = row[4]  # Add amount separately
-        data_without_amount_issue["notes"] = row[5]  # Add issue_date_time separately
-        data_without_amount_issue["duration"] = row[6]  
+        # Add amount separately
+        data_without_amount_issue["session_id"] = row[4]
+        # Add issue_date_time separately
+        data_without_amount_issue["notes"] = row[5]
+        data_without_amount_issue["duration"] = row[6]
         data_without_amount_issue["date_time"] = row[7]
-        data_without_amount_issue["patient_id"] = row[8]  
-        data_without_amount_issue["therapist_id"] = row[9]  
-        data_without_amount_issue["session_complete"] = row[10]  
+        data_without_amount_issue["patient_id"] = row[8]
+        data_without_amount_issue["therapist_id"] = row[9]
+        data_without_amount_issue["session_complete"] = row[10]
         extracted_data.append(data_without_amount_issue)
     print(extracted_data)
     return extracted_data
@@ -115,7 +118,8 @@ def get_sessions_by_therapist_id(therapist_id: int, db: SessionLocal = Depends(g
     results = query.all()
 
     if not results:
-        raise HTTPException(status_code=404, detail="No sessions found for the given therapist")
+        raise HTTPException(
+            status_code=404, detail="No sessions found for the given therapist")
 
     # Construct the response
     response = [
@@ -144,13 +148,14 @@ def create_session(session: schemas.SessionCreate, db: SessionLocal = Depends(ge
     return db_session
 
 
-
 @router.delete("/session/{session_id}")
 def delete_session(session_id: int, db: SessionLocal = Depends(get_db)):
     # Check if the session exists
-    existing_session = db.query(models.Session).filter(models.Session.session_id == session_id).first()
+    existing_session = db.query(models.Session).filter(
+        models.Session.session_id == session_id).first()
     if existing_session is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="ID Not Exists")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="ID Not Exists")
     # Delete the session
     db.delete(existing_session)
     db.commit()
@@ -160,7 +165,8 @@ def delete_session(session_id: int, db: SessionLocal = Depends(get_db)):
 @router.put("/session/{session_id}", response_model=schemas.SessionResponse)
 def update_session(session_id: int, session_data: schemas.SessionUpdate, db: SessionLocal = Depends(get_db)):
     # Check if the session exists
-    existing_session = db.query(models.Session).filter(models.Session.session_id == session_id).first()
+    existing_session = db.query(models.Session).filter(
+        models.Session.session_id == session_id).first()
     if existing_session is None:
         raise HTTPException(status_code=404, detail="Session not found")
 
@@ -171,4 +177,3 @@ def update_session(session_id: int, session_data: schemas.SessionUpdate, db: Ses
     db.commit()
     db.refresh(existing_session)
     return existing_session
-
