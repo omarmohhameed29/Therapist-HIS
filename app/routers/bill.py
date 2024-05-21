@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from .. import models, schemas
 from ..database import engine, SessionLocal, get_db
+from datetime import datetime
 
 router = APIRouter(
     tags=['Bill']
@@ -93,7 +94,7 @@ def generate_bill_from_session_id(session_id: int, db: SessionLocal = Depends(ge
     new_bill = models.Bill(
         session_id=session.session_id,
         payment_status="Pending",  # Default status
-        issue_date_time="2015-05-05",  # Current time as issue date
+        issue_date_time=datetime.now(),  # Current time as issue date
         # Assuming therapist has hour_rate and session has duration attributes
         amount=therapist.hour_rate * session.duration,
         payment_method="Cash",  # Default payment method
