@@ -54,6 +54,66 @@ def get_bills_with_details(db: SessionLocal = Depends(get_db)):
     return extracted_data
 
 
+# @router.get('/bills', response_model=list[schemas.BillResponse])
+@router.get('/bills/{bill_id}')
+def get_bill_by_id(bill_id: int, db: SessionLocal = Depends(get_db)):
+    """
+    Retrieves bills along with associated therapist and patient information.
+    """
+    # Define aliases for the tables
+    Bill = models.Bill
+    SessionModel = models.Session
+    Therapist = models.Therapist
+    Patient = models.Patient
+
+    # Query bills along with associated session, appointment, therapist, and patient information
+    query = db.query(Bill.bill_id, Patient.first_name, Patient.last_name,
+                     Therapist.first_name, Therapist.last_name,Therapist.specialization,
+                     Bill.amount, Bill.payment_status, Bill.issue_date_time, Bill.payment_method, SessionModel.session_id, Therapist.specialization).\
+        join(SessionModel, Bill.session_id == SessionModel.session_id).\
+        join(Therapist, SessionModel.therapist_id == Therapist.therapist_id).\
+        join(Patient, SessionModel.patient_id == Patient.patient_id).\
+        filter(Bill.bill_id == bill_id)
+
+    
+    # Query the session along with associated therapist and patient information
+    query = db.query(
+        Bill.bill_id,
+        Patient.first_name.label('patient_first_name'),
+        Patient.last_name.label('patient_last_name'),
+        Therapist.first_name.label('therapist_first_name'),
+        Therapist.last_name.label('therapist_last_name'),
+        Therapist.specialization,
+        Bill.amount,
+        Bill.payment_status,
+        Bill.issue_date_time,
+        Bill.payment_method,
+        SessionModel.session_id,
+        Therapist.specialization,
+    ).join(Therapist, SessionModel.therapist_id == Therapist.therapist_id)\
+     .join(Patient, SessionModel.patient_id == Patient.patient_id)\
+     .filter(Bill.bill_id == bill_id)
+
+    result = query.first()
+
+    if not result:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    # Construct the response
+    response = {
+        "id": result.bill_id,
+        "patient": f"{result.patient_first_name} {result.patient_last_name}",
+        "doctor": f"{result.therapist_first_name} {result.therapist_last_name}",
+        "specialization": result.specialization,
+        "status": result.payment_status,
+        "paymentMethod": result.payment_method,
+        "amount": result.amount,
+        "paymentDate": result.issue_date_time,
+        "session_id": result.session_id 
+    }
+
+    return response
+
 @router.post("/bills", response_model=schemas.BillResponse, status_code=201)
 def create_bill(bill_data: schemas.BillCreate, db: SessionLocal = Depends(get_db)):
     db_bill = models.Bill(**bill_data.model_dump())
